@@ -7,8 +7,7 @@ using UnityEngine.Audio;
 public class IMGUIScript : MonoBehaviour
 {
     public Vector2 scr; //in place of the "layout" public code. No need for that with this
-    
-    
+        
     public struct Layout
     {
         public float Horizontal;
@@ -26,13 +25,35 @@ public class IMGUIScript : MonoBehaviour
     [Header("Options Tabs")]
     public string[] idList;
     public int currentOption;
+    [Header("Resolution")]
+    public Resolution[] resolutions; //a Vector2 specifically for int
+    public string[] resolutionName; //reminder: string is a list
+    public bool showResOptions;
+    public string resoDropDownLabel = "Resolution";
+    public string fullsScreenToggleName = "Windowed";
+    public Vector2 scrollPosition = Vector2.zero;
 
-    private void Awake()
+    private void Awake() //codes run in order or written unless it's a specified function (event trigger) like Awake
     {
         if(!GameObject.FindGameObjectWithTag("Music"))//Needed the ! in front of GameObject in order to activate when it ISN'T already playing
         {
             Instantiate(music);
         }
+        #region Resolution
+        //grab all the resoulations of our screen and add them to a list
+        resolutions = Screen.resolutions;
+
+        // set the size of our array of names to the length of our resolution array.
+        resolutionName = new string[resolutions.Length];
+        //for every resoulution create the display name
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            resolutionName[i] = resolutions[i].width + "x" + resolutions[i].height;
+        }
+        #endregion
+        #region Keybinds
+
+        #endregion
     }
     private void OnGUI()//runs per frame same as update...
     {
@@ -112,10 +133,10 @@ public class IMGUIScript : MonoBehaviour
         GUI.Box(new Rect(1 * scr.x, 0 * scr.y, 14 * scr.x, 9 * scr.y), "Background");
 
         //Title
-        GUI.Box(new Rect(4 * scr.x, 2 * scr.y, 8 * scr.x, 2 * scr.y), "Title");
+        //GUI.Box(new Rect(4 * scr.x, 2 * scr.y, 8 * scr.x, 2 * scr.y), "Title");
 
         //Options
-        GUI.Box(new Rect(5 * scr.x, 4 * scr.y, 6 * scr.x, 0.5f * scr.y), "Options");
+        GUI.Box(new Rect(5 * scr.x, 1.25f* scr.y, 6 * scr.x, 0.5f * scr.y), "Options");
         #region Forloop Buttons
         /*
          
@@ -135,18 +156,56 @@ public class IMGUIScript : MonoBehaviour
 
         for (int i = 0; i < idList.Length; i++)
         {
-            if(GUI.Button(new Rect(scr.x, scr.y, scr.x, scr.y),idList[i]))
+            if(GUI.Button(new Rect(4*scr.x+(i*2*scr.x), 0.75f*scr.y, 2*scr.x, 0.4f*scr.y),idList[i]))
             {
-
+                currentOption = i;
+                scrollPosition = Vector2.zero;
             }
         }
         switch (currentOption)
         {
             case 0:
+                #region Audio
+                audi.SetFloat("VolumeMaster", volumeMaster = GUI.HorizontalSlider(new Rect(6 * scr.x, 6 * scr.y, 2 * scr.x, 0.25f * scr.y), volumeMaster, -80, 20));
+
+                audi.SetFloat("VolumeMusic", volumeMusic = GUI.HorizontalSlider(new Rect(6 * scr.x, 6.5f * scr.y, 2 * scr.x, 0.25f * scr.y), volumeMusic, -80, 20));
+
+                audi.SetFloat("VolumeSFX", volumeSFX = GUI.HorizontalSlider(new Rect(6 * scr.x, 7 * scr.y, 2 * scr.x, 0.25f * scr.y), volumeSFX, -80, 20));
+                #endregion
+
+                //HOMEWORK CREATE A MUTE TOGGLE
 
                 break;
             case 1:
-
+                #region Resoultion Settings
+                if (GUI.Button(new Rect(4*scr.x, 3*scr.y, 3*scr.x, 0.5f*scr.y),resoDropDownLabel))
+                {
+                    showResOptions = !showResOptions; //! = not
+                    //if true becomes false
+                    //if false become true
+                }
+                if (showResOptions)
+                {
+                    //create a background
+                    GUI.Box(new Rect(4 * scr.x, 3.5f * scr.y, 3 * scr.x, 4 * scr.y), "");
+                    //create a scroll view
+                    scrollPosition = GUI.BeginScrollView(new Rect(4 * scr.x, 3.5f * scr.y, 3 * scr.x, 4 * scr.y), scrollPosition, new Rect(0,0,0,0.5f* scr.y * resolutions.Length), false, true);
+                    //fill the scroll view with buttons
+                    for (int i = 0; i < resolutions.Length; i++)
+                    {
+                        //every element creates a button according to our arrays
+                        if (GUI.Button(new Rect(0,i*0.5f*scr.y,2.75f*scr.x,0.5f*scr.y), resolutionName[i]))
+                        {
+                            //set our resolution to the selected resolution
+                            Screen.SetResolution(resolutions[i].width, resolutions[i].height, Screen.fullScreen);
+                            //close dropdown
+                            showResOptions = false;
+                        }
+                    }
+                    //end scroll view
+                    GUI.EndScrollView();//if missing then you get a pushing more clips error
+                }
+                #endregion
                 break;
 
             case 2:
@@ -157,18 +216,12 @@ public class IMGUIScript : MonoBehaviour
 
                 break;
             default:
+                currentOption = 0; //sends back to audio in case something breaks
                 break;
 
         }
         #endregion
 
-        #region Audio
-        audi.SetFloat("VolumeMaster", volumeMaster = GUI.HorizontalSlider(new Rect(6 * scr.x, 6 * scr.y, 2 * scr.x, 0.25f * scr.y), volumeMaster, -80, 20));
-
-        audi.SetFloat("VolumeMusic", volumeMusic = GUI.HorizontalSlider(new Rect(6 * scr.x, 6.5f * scr.y, 2 * scr.x, 0.25f * scr.y), volumeMusic, -80, 20));
-
-        audi.SetFloat("VolumeSFX", volumeSFX = GUI.HorizontalSlider(new Rect(6 * scr.x, 7 * scr.y, 2 * scr.x, 0.25f * scr.y), volumeSFX, -80, 20));
-        #endregion
 
         if (GUI.Button(new Rect(5 * scr.x, 8 * scr.y, 2 * scr.x, 0.5f * scr.y), "Back"))
         {

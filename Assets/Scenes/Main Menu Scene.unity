@@ -173,8 +173,17 @@ MonoBehaviour:
   volumeMusic: 0
   volumeSFX: 0
   music: {fileID: 8614670677426083069, guid: 4cf64218b8b35f243a48ad40b79f93d3, type: 3}
-  idList: []
+  idList:
+  - Volume
+  - Resolution
+  - Keybindings
+  - Other
   currentOption: 0
+  resolutionName: []
+  showResOptions: 0
+  resoDropDownLabel: Resolution
+  fullsScreenToggleName: Windowed
+  scrollPosition: {x: 0, y: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

@@ -59,11 +59,12 @@
     <Compile Include="Assets\Scripts\Inheritance\Enemy.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Player.cs" />
     <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\StayingAlive.cs" />
     <Compile Include="Assets\Scripts\Inheritance\LifeForce.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Stats.cs" />
-    <Compile Include="Assets\Scripts\Menu\IMGUIScript.cs" />
-    <Compile Include="Assets\Scripts\StayingAlive.cs" />
     <Compile Include="Assets\Scripts\Menu\ReturnToMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\IMGUIScript.cs" />
+    <Compile Include="Assets\Scripts\Notes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
