@@ -10,6 +10,9 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     - UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder
+    UnityEngine.UI.dll:
+    - UnityEngine.EventSystems.EventSystem
+    - UnityEngine.EventSystems.StandaloneInputModule
   sceneClasses:
     Assets/Scenes/Customisation.unity:
     - Class: 1
@@ -95,7 +98,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2140}
     - Class: 114
-      Script: {instanceID: 3318}
+      Script: {instanceID: 2800}
+    - Class: 114
+      Script: {instanceID: 3320}
+    - Class: 114
+      Script: {instanceID: 3344}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -507,7 +514,7 @@ ScriptsOnlyBuild:
     className: TestResultRendererCallback
   - hash:
       serializedVersion: 2
-      Hash: 509654f02c492738609bf7846d92e826
+      Hash: f24c777bef147db5d45212fe265b969c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: IMGUIScript

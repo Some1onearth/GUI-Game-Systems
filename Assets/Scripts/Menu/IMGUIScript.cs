@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +20,7 @@ public class IMGUIScript : MonoBehaviour
     [Tooltip ("Reference to Unity's Audio Mixer")]
     public AudioMixer audi;
     public float volumeMaster, volumeMusic, volumeSFX;
+    public bool toggleMute;
     [Tooltip ("Reference to Audio Source prefab")]
     public GameObject music;
     [Header("Options Tabs")]
@@ -30,8 +31,21 @@ public class IMGUIScript : MonoBehaviour
     public string[] resolutionName; //reminder: string is a list
     public bool showResOptions;
     public string resoDropDownLabel = "Resolution";
-    public string fullsScreenToggleName = "Windowed";
+    public bool fullScreenToggleName;
     public Vector2 scrollPosition = Vector2.zero;
+    public static Dictionary<string, KeyCode> inputKeys = new Dictionary<string, KeyCode>(); //static stays in memory and doesn't get deleted from game unlike enemies and such, Dictionary is like an array.
+    
+    [Serializable]
+    public struct KeySetup
+    {
+        public string keyName;
+        public string defaultKey;
+        public string tempKey;
+    }
+    public KeySetup[] keySetUp;
+    [Tooltip("This doesn't get filled by us, it helps us work out what key is selected")]
+    public KeySetup currentKey;
+    private bool togglemute;
 
     private void Awake() //codes run in order or written unless it's a specified function (event trigger) like Awake
     {
@@ -52,9 +66,30 @@ public class IMGUIScript : MonoBehaviour
         }
         #endregion
         #region Keybinds
+        //For loop to add the keys to the Dictionary with Save or Default depending on load
+        for (int i = 0; i < keySetUp.Length; i++)//for all the keys in our base set up array
+        {
+            //add key according to the saved string or default
+            inputKeys.Add(keySetUp[i].keyName, (KeyCode)Enum.Parse(typeof(KeyCode),PlayerPrefs.GetString(keySetUp[i].keyName,keySetUp[i].defaultKey)));
+            //Parse Method is used to convert the string represtation of 1 data type to another
+            //Int32.Parse = int into its 32 Bits
+            
+            Debug.Log(keySetUp[i].keyName + ": " + keySetUp[i].defaultKey);            
+        }
+
 
         #endregion
     }
+
+    void SaveKey()
+    {
+        foreach (var key in inputKeys)
+        {
+            PlayerPrefs.SetString(key.Key, key.Value.ToString());
+        }
+        PlayerPrefs.Save();
+    }
+
     private void OnGUI()//runs per frame same as update...
     {
         //screen width and height is broken up into 16 by 9 sections in a grid
@@ -74,7 +109,6 @@ public class IMGUIScript : MonoBehaviour
         
         //OptionsScreen();
     }
-
     void Grid()
     {
         //Aspect Ratio 16:9
@@ -171,9 +205,13 @@ public class IMGUIScript : MonoBehaviour
                 audi.SetFloat("VolumeMusic", volumeMusic = GUI.HorizontalSlider(new Rect(6 * scr.x, 6.5f * scr.y, 2 * scr.x, 0.25f * scr.y), volumeMusic, -80, 20));
 
                 audi.SetFloat("VolumeSFX", volumeSFX = GUI.HorizontalSlider(new Rect(6 * scr.x, 7 * scr.y, 2 * scr.x, 0.25f * scr.y), volumeSFX, -80, 20));
+
+                toggleMute = GUI.Toggle(new Rect(8.25f * scr.x, 6 * scr.y, 0.5f * scr.x, 0.5f * scr.y), toggleMute, "");
+                AudioListener.pause = toggleMute;
+
                 #endregion
 
-                //HOMEWORK CREATE A MUTE TOGGLE
+                //HOMEWORK CREATE A MUTE TOGGLE and A FULL SCREEN TOGGLE
 
                 break;
             case 1:
@@ -205,13 +243,28 @@ public class IMGUIScript : MonoBehaviour
                     //end scroll view
                     GUI.EndScrollView();//if missing then you get a pushing more clips error
                 }
+                fullScreenToggleName = GUI.Toggle(new Rect(8.25f * scr.x, 6 * scr.y, 0.5f * scr.x, 0.5f * scr.y), fullScreenToggleName, "");
+                Screen.fullScreen = fullScreenToggleName;
+
+
                 #endregion
                 break;
-
             case 2:
-
+                #region Keybindings
+                for (int i = 0; i < keySetUp.Length; i++)
+                {
+                    if (GUI.Button(new Rect(6.5f * scr.x, (3 * scr.y) + (i * 0.25f * scr.x), 3 * scr.x, 0.25f * scr.y), keySetUp[i].keyName))
+                    {
+                        currentKey.keyName = keySetUp[i].keyName;
+                    }
+                }
+                if (currentKey.keyName != null)
+                {
+                    Keybinds();
+                }
+                // more HOMEWORK, GET THIS TO SHOW
+                #endregion
                 break;
-
             case 3:
 
                 break;
@@ -226,6 +279,34 @@ public class IMGUIScript : MonoBehaviour
         if (GUI.Button(new Rect(5 * scr.x, 8 * scr.y, 2 * scr.x, 0.5f * scr.y), "Back"))
         {
             showOptions = false;
+            SaveKey();
+        }
+    }
+    void Keybinds()
+    {
+        string newKey = "";
+        Event e = Event.current;
+        if(currentKey.keyName !=null)
+        {
+            if (e.isKey)
+            {
+                newKey = e.keyCode.ToString();
+            }
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                newKey = "LeftShift";
+            }
+            if (Input.GetKey(KeyCode.RightShift))
+            {
+                newKey = "RightShift";
+            }
+            if (newKey != "")//if new key isn't empty
+            {
+                inputKeys[currentKey.keyName] = (KeyCode)Enum.Parse(typeof(KeyCode), newKey);
+                //the Above changes out Key in the Dictionary to the Key we Just Pressed
+                Debug.Log(currentKey.keyName + ": " + newKey);
+                currentKey.keyName = null; //Reset and wait
+            }
         }
     }
 }
