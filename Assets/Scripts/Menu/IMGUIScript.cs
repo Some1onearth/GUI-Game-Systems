@@ -6,21 +6,23 @@ using UnityEngine.Audio;
 
 public class IMGUIScript : MonoBehaviour
 {
-    public Vector2 scr; //in place of the "layout" public code. No need for that with this
+    public static Vector2 scr; //in place of the "layout" public code. No need for that with this
+    //static can be referenced at any time by other scripts as static persists and isn't destroyed as soon as scenes changes
         
-    public struct Layout
+    /*public struct Layout
     {
         public float Horizontal;
         public float Vertical;
     }
     [Header("Screen Display")]
-    public Layout screen;
+    public static Layout screen;*/
     public bool showOptions;
     [Header ("Audio")]
     [Tooltip ("Reference to Unity's Audio Mixer")]
     public AudioMixer audi;
     public float volumeMaster, volumeMusic, volumeSFX;
-    public bool toggleMute;
+    public string toggleMuteMusic, toggleMuteSFX;
+    public bool isMuted;
     [Tooltip ("Reference to Audio Source prefab")]
     public GameObject music;
     [Header("Options Tabs")]
@@ -31,7 +33,7 @@ public class IMGUIScript : MonoBehaviour
     public string[] resolutionName; //reminder: string is a list
     public bool showResOptions;
     public string resoDropDownLabel = "Resolution";
-    public bool fullScreenToggleName;
+    public string fullScreenToggleName;
     public Vector2 scrollPosition = Vector2.zero;
     public static Dictionary<string, KeyCode> inputKeys = new Dictionary<string, KeyCode>(); //static stays in memory and doesn't get deleted from game unlike enemies and such, Dictionary is like an array.
     
@@ -206,8 +208,37 @@ public class IMGUIScript : MonoBehaviour
 
                 audi.SetFloat("VolumeSFX", volumeSFX = GUI.HorizontalSlider(new Rect(6 * scr.x, 7 * scr.y, 2 * scr.x, 0.25f * scr.y), volumeSFX, -80, 20));
 
-                toggleMute = GUI.Toggle(new Rect(8.25f * scr.x, 6 * scr.y, 0.5f * scr.x, 0.5f * scr.y), toggleMute, "");
-                AudioListener.pause = toggleMute;
+                if(GUI.Button(new Rect(8.25f * scr.x, 6 * scr.y, 1 * scr.x, 0.5f * scr.y), toggleMuteMusic))
+                {
+                    isMuted = !isMuted;
+                    if (isMuted)
+                    {
+                        toggleMuteMusic = "Unmute Music";
+                        audi.SetFloat("VolumeMusic", volumeMusic = -80);
+                    }
+                    else
+                    {
+                        toggleMuteMusic = "Mute Music";
+                        audi.SetFloat("VolumeMusic", volumeMusic = 0);
+                    }
+                }
+                if (GUI.Button(new Rect(8.25f * scr.x, 7 * scr.y, 1 * scr.x, 0.5f * scr.y), toggleMuteSFX))
+                {
+                    isMuted = !isMuted;
+                    if (isMuted)
+                    {
+                        toggleMuteSFX = "Unmute";
+                        audi.SetFloat("VolumeSFX", volumeSFX = -80);
+                    }
+                    else
+                    {
+                        toggleMuteSFX = "Mute";
+                        audi.SetFloat("VolumeSFX", volumeSFX = 0);
+                    }
+                }
+                //Below was another to mute all but not specifics like the working one above
+                //toggleMute = GUI.Toggle(new Rect(8.25f * scr.x, 6 * scr.y, 0.5f * scr.x, 0.5f * scr.y), toggleMute, "");
+                //AudioListener.pause = toggleMute;
 
                 #endregion
 
@@ -243,9 +274,22 @@ public class IMGUIScript : MonoBehaviour
                     //end scroll view
                     GUI.EndScrollView();//if missing then you get a pushing more clips error
                 }
-                fullScreenToggleName = GUI.Toggle(new Rect(8.25f * scr.x, 6 * scr.y, 0.5f * scr.x, 0.5f * scr.y), fullScreenToggleName, "");
-                Screen.fullScreen = fullScreenToggleName;
-
+               
+                if (GUI.Button(new Rect(8.25f * scr.x, 6 * scr.y, 1.5f * scr.x, 0.5f * scr.y), fullScreenToggleName))
+                {
+                    Screen.fullScreen = !Screen.fullScreen;
+                    if (Screen.fullScreen)
+                    {
+                        fullScreenToggleName = "Fullscreen";
+                    }
+                    else
+                    {
+                        fullScreenToggleName = "Windowed";
+                    }
+                }
+                //fullScreenToggleName = GUI.Toggle(new Rect(8.25f * scr.x, 6 * scr.y, 0.5f * scr.x, 0.5f * scr.y), fullScreenToggleName, "");
+                //Screen.fullScreen = fullScreenToggleName;
+                //Above was another way to do fullscreen toggle
 
                 #endregion
                 break;
@@ -253,7 +297,7 @@ public class IMGUIScript : MonoBehaviour
                 #region Keybindings
                 for (int i = 0; i < keySetUp.Length; i++)
                 {
-                    if (GUI.Button(new Rect(6.5f * scr.x, (3 * scr.y) + (i * 0.25f * scr.x), 3 * scr.x, 0.25f * scr.y), keySetUp[i].keyName))
+                    if (GUI.Button(new Rect(6.5f * scr.x, (3 * scr.y) + (i * 0.25f * scr.x), 3 * scr.x, 0.25f * scr.y), keySetUp[i].keyName + " " + inputKeys[keySetUp[i].keyName]))
                     {
                         currentKey.keyName = keySetUp[i].keyName;
                     }
