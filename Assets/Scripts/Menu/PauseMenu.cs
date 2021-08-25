@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -16,12 +17,15 @@ public class PauseMenu : MonoBehaviour
     [Header("Keybinds")]
     public KeySetup[] keySetUp;
 #endif
+
+    public static bool isPaused; //public for testing purposes, not necessarily needed to be public, static in case other parts need to use it
+
     void Start()
     {
 #if UNITY_EDITOR
         //Set up for this scene the screen or scr reference for 16:9
         IMGUIScript.scr.x = Screen.width / 16;
-        IMGUIScript.scr.y = Screen.width / 9;
+        IMGUIScript.scr.y = Screen.height / 9;
 
         //if we don't have an entry in our key dictionary
         /*
@@ -47,7 +51,7 @@ public class PauseMenu : MonoBehaviour
             #endregion
         }
 
-        
+
 
         //loop through and set up our keys according to keySetUp
         //For loop to add the keys to the Dictionary with Save or Default depending on load
@@ -57,11 +61,80 @@ public class PauseMenu : MonoBehaviour
 
 
 #endif
+        UnPaused();
     }
 
-    // Update is called once per frame
-    void Update()
+    void Paused() //when paused is triggered
     {
-        
+        //stop our time
+        Time.timeScale = 0;
+        //free our cursor
+        Cursor.lockState = CursorLockMode.Confined;
+        //see our cursor
+        Cursor.visible = true;
+    }
+    public void UnPaused() //when unpaused is triggered
+    {
+        //unpause our game if attached to a button...doesn't matter if it's an ESC toggle
+        isPaused = false;
+        //start time
+        Time.timeScale = 1;
+        //lock our cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        //hide our cursor
+        Cursor.visible = false;
+    }
+    private void Update()
+    {
+        //GetKeyDown    On Press
+        //GetKey        While Held
+        //GetKeyUp      On Release
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isPaused = !isPaused;
+            if (isPaused)
+            {
+                Paused();
+            }
+            else
+            {
+                UnPaused();
+            }
+        }
+    }
+    private void OnGUI()
+    {
+        if (isPaused)
+        {
+            MenuLayout();
+        }
+    }
+    void MenuLayout()
+    {
+        GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
+        //Background
+        GUI.Box(new Rect(2 * IMGUIScript.scr.x, 1 * IMGUIScript.scr.y, 12 * IMGUIScript.scr.x, 6 * IMGUIScript.scr.y), "Pause Background");
+        //Title
+        GUI.Box(new Rect(7 * IMGUIScript.scr.x, 2 * IMGUIScript.scr.y, 2 * IMGUIScript.scr.x, 0.5f * IMGUIScript.scr.y), "Pause Menu");
+        //Return // if GUI button on the screen is pressed
+        if (GUI.Button(new Rect(7 * IMGUIScript.scr.x, 3 * IMGUIScript.scr.y, 2 * IMGUIScript.scr.x, 0.5f * IMGUIScript.scr.y), "Return"))
+        {
+            //unpause our game
+            UnPaused();
+        }
+        //MainMenu
+        if (GUI.Button(new Rect(7 * IMGUIScript.scr.x, 4 * IMGUIScript.scr.y, 2 * IMGUIScript.scr.x, 0.5f * IMGUIScript.scr.y), "Title Screen"))
+        {            
+            //change scene
+            SceneManager.LoadScene(0);
+        }
+        //Exit
+        if (GUI.Button(new Rect(7 * IMGUIScript.scr.x, 5 * IMGUIScript.scr.y, 2 * IMGUIScript.scr.x, 0.5f * IMGUIScript.scr.y), "Exit Game"))
+        {
+            #if UNITY_EDITOR 
+            UnityEditor.EditorApplication.isPlaying = false;
+            #endif
+            Application.Quit();
+        }
     }
 }

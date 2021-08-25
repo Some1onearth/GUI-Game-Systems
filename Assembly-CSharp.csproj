@@ -56,18 +56,20 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Player\MouseLook.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Enemy.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Player.cs" />
     <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StayingAlive.cs" />
+    <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Inheritance\LifeForce.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Stats.cs" />
     <Compile Include="Assets\Scripts\Menu\ReturnToMenu.cs" />
+    <Compile Include="Assets\Scripts\Player\Movement.cs" />
     <Compile Include="Assets\Scripts\Notes.cs" />
     <Compile Include="Assets\Scripts\Menu\IMGUIScript.cs" />
-    <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
-    <Compile Include="Assets\Scripts\Player\Movement.cs" />
-    <Compile Include="Assets\Scripts\Player\MouseLook.cs" />
+    <Compile Include="Assets\Scripts\Player\Interact.cs" />
+    <Compile Include="Assets\Scripts\NPC\LinearDlg.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

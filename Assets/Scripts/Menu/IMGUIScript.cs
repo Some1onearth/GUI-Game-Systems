@@ -68,6 +68,7 @@ public class IMGUIScript : MonoBehaviour
         }
         #endregion
         #region Keybinds
+        if(inputKeys.Count <= 0)
         //For loop to add the keys to the Dictionary with Save or Default depending on load
         for (int i = 0; i < keySetUp.Length; i++)//for all the keys in our base set up array
         {
