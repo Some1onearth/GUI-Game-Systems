@@ -4,7 +4,7 @@ using UnityEngine;
 //this script can be found in the Component Menu section under the option Soy Sauce/Player Scripts/ First Person Movement
 [AddComponentMenu("Soy Sauce/Player Scripts/First Person Movement")]
 //This script requires the component Character controller to be attached to the Game Object
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController))] //"type of" when connecting an object that needs something, need to specify which type of thing it requires
 
 
 public class Movement : MonoBehaviour
