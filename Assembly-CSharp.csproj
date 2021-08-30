@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Player\MouseLook.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Player\Interact.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Player.cs" />
     <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StayingAlive.cs" />
@@ -67,9 +68,9 @@
     <Compile Include="Assets\Scripts\Menu\ReturnToMenu.cs" />
     <Compile Include="Assets\Scripts\Player\Movement.cs" />
     <Compile Include="Assets\Scripts\Notes.cs" />
-    <Compile Include="Assets\Scripts\Menu\IMGUIScript.cs" />
-    <Compile Include="Assets\Scripts\Player\Interact.cs" />
     <Compile Include="Assets\Scripts\NPC\LinearDlg.cs" />
+    <Compile Include="Assets\Scripts\Menu\IMGUIScript.cs" />
+    <Compile Include="Assets\Scripts\Menu\CanvasHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
