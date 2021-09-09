@@ -5,10 +5,11 @@ using UnityEditor;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
-namespace CanvasExample //if the name of this script was the same as "Main Menu", you can place this namespace to separate the two.
+namespace CanvasExample //if the name of this script was the same as "Main Menu", you can place this namespace to separate the two of the same name but different family.
 {
     public class CanvasHandler : MonoBehaviour
     {
+        #region Audio
         public AudioMixer masterAudio;
         public void ChangeMasterVolume(float volume)
         {
@@ -56,6 +57,7 @@ namespace CanvasExample //if the name of this script was the same as "Main Menu"
                 masterAudio.SetFloat("VolumeSFX", 0);
             }
         }
+        #endregion
         public void Quality(int qualityIndex)
         {
             QualitySettings.SetQualityLevel(qualityIndex);
@@ -71,7 +73,7 @@ namespace CanvasExample //if the name of this script was the same as "Main Menu"
         public void ExitTheGame()
         {
             #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false; //don't need UnityEditor at the beginning since UnityEditor is here. Easier to put up top 
             #endif
             Application.Quit();
         }
@@ -80,32 +82,49 @@ namespace CanvasExample //if the name of this script was the same as "Main Menu"
             Screen.fullScreen = isFullScreen;
         }
         public Resolution[] resolutions;
-        public Dropdown resolution;
+        public Dropdown resDropDown;
 
-        private void Start()
+        private void Start()//sets up the dropdown to display the computer's resolution
         {
-            resolutions = Screen.resolutions;
-            resolution.ClearOptions();
-            List<string> options = new List<string>();
-            int currentResolutionIndex = 0;
-            for (int i = 0; i < resolutions.Length; i++)
+            if (resDropDown != null)
             {
-                string option = resolutions[i].width + "x" + resolutions[i].height;
-                options.Add(option);
-
-                if(resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+                resolutions = Screen.resolutions;
+                resDropDown.ClearOptions();
+                List<string> resOptions = new List<string>();
+                int currentResolutionIndex = 0;
+                for (int i = 0; i < resolutions.Length; i++)
                 {
-                    currentResolutionIndex = i;
+                    string option = resolutions[i].width + "x" + resolutions[i].height;
+                    resOptions.Add(option);
+
+                    if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+                    {
+                        currentResolutionIndex = i;
+                    }
                 }
+                resDropDown.AddOptions(resOptions);
+                resDropDown.value = currentResolutionIndex;
+                resDropDown.RefreshShownValue();
             }
-            resolution.AddOptions(options);
-            resolution.value = currentResolutionIndex;
-            resolution.RefreshShownValue();
+            else
+            {
+                Debug.LogWarning("SCRUB ATTACH THE DROP DOWN!!!!!");
+            }
+            
+
         }
         public void SetResolution(int resolutionIndex)
         {
             Resolution res = resolutions[resolutionIndex];
             Screen.SetResolution(res.width, res.height, Screen.fullScreen);
         }
+
+        #region Cursor
+        public Texture2D[] cursor;
+        public void ChangeCursor(int selectedCursor)
+        {
+            Cursor.SetCursor(cursor[selectedCursor], Vector2.zero, CursorMode.Auto);
+        }
+        #endregion
     }
 }
