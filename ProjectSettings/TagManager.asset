@@ -7,6 +7,8 @@ TagManager:
   - Music
   - Item
   - NPC
+  - CheckPoint
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -14,8 +16,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - MiniMap
   - 
   - 
   - 

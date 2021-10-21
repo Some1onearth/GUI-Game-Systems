@@ -60,21 +60,37 @@
     <Compile Include="Assets\Scripts\Inheritance\Enemy.cs" />
     <Compile Include="Assets\Scripts\Player\Interact.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Player.cs" />
+    <Compile Include="Assets\Scripts\NPC\WaypointAI.cs" />
+    <Compile Include="Assets\Scripts\Player\CustomisationGet.cs" />
     <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StayingAlive.cs" />
+    <Compile Include="Assets\Scripts\NPC\WolfAI.cs" />
+    <Compile Include="Assets\Scripts\NPC\GradientHealth.cs" />
+    <Compile Include="Assets\Scripts\Animation\PlayerHandler.cs" />
+    <Compile Include="Assets\Scripts\Animation\AnimationExampleEvents.cs" />
     <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Inheritance\LifeForce.cs" />
     <Compile Include="Assets\Scripts\Inheritance\Stats.cs" />
     <Compile Include="Assets\Scripts\Menu\CanvasScripts\KeyBindsManager.cs" />
+    <Compile Include="Assets\Scripts\NPC\EnemyMovement.cs" />
     <Compile Include="Assets\Scripts\Menu\ReturnToMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\CanvasScripts\CanvasHandler.cs" />
     <Compile Include="Assets\Scripts\Player\Movement.cs" />
     <Compile Include="Assets\Scripts\Notes.cs" />
+    <Compile Include="Assets\Scripts\Inheritance\Attributes.cs" />
     <Compile Include="Assets\Scripts\NPC\LinearDlg.cs" />
+    <Compile Include="Assets\Scripts\Menu\Compass.cs" />
     <Compile Include="Assets\Scripts\Menu\IMGUIScript.cs" />
-    <Compile Include="Assets\Scripts\Animation\AnimationExampleEvents.cs" />
+    <Compile Include="Assets\Scripts\Player\CustomisationSet.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Chest.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Inventory.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Item.cs" />
+    <Compile Include="Assets\Scripts\Inventory\ItemData.cs" />
+    <Compile Include="Assets\Scripts\Inventory\ItemHandler.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Shop.cs" />
   </ItemGroup>
   <ItemGroup>
+     <None Include="Assets\Art\Enemies\Bases\GoblinSlingshot\Shader\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -659,6 +675,9 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
