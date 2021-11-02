@@ -47,10 +47,28 @@ public class Interact : MonoBehaviour
                 #endregion
                 #region Item
                 //if the collider we hit is tagged Item
-                if (hitInfo.collider.CompareTag("NPC")) //does the same thing as .tag for now
+                if (hitInfo.collider.CompareTag("Item")) //does the same thing as .tag for now
                 {
                     //Debug that we hit an Item
-                    Debug.Log("Item");
+                    Debug.Log("Our Interact ray hit an Item");
+                    ItemHandler handler = hitInfo.transform.GetComponent<ItemHandler>();
+                    if (handler != null)
+                    {
+                        handler.OnCollection();
+                    }
+                }
+                #endregion
+                #region Chest
+                //if the collider we hit is tagged Item
+                if (hitInfo.collider.CompareTag("Chest")) //does the same thing as .tag for now
+                {
+                    //Debug that we hit an Item
+                    Debug.Log("Our Interact ray hit an Chest");
+                    Chest currenChest = hitInfo.transform.GetComponent<Chest>();
+                    if (currenChest != null)
+                    {
+                        currenChest.showChest = !currenChest.showChest;
+                    }
                 }
                 #endregion
             }

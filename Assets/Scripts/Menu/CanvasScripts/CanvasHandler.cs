@@ -11,6 +11,20 @@ namespace CanvasExample //if the name of this script was the same as "Main Menu"
     {
         #region Audio
         public AudioMixer masterAudio;
+        public AudioSource _as;
+        public AudioClip[] audioClipArray;
+        public void Awake()
+        {
+            _as = GetComponent<AudioSource>();
+        }
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                _as.clip = audioClipArray[Random.Range(0, audioClipArray.Length)];
+                _as.PlayOneShot(_as.clip);
+            }
+        }
         public void ChangeMasterVolume(float volume)
         {
             masterAudio.SetFloat("VolumeMaster", volume);

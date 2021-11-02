@@ -126,7 +126,7 @@ public static class ItemData
                 value = 1;
                 icon = "Food/DiseasedBread";
                 mesh = "Food/DiseasedBread";
-                type = ItemTypes.Potion;
+                type = ItemTypes.Food;
                 damage = 5;
                 break;
             case 301:
@@ -136,7 +136,7 @@ public static class ItemData
                 value = 3;
                 icon = "Food/Apple";
                 mesh = "Food/Apple";
-                type = ItemTypes.Potion;
+                type = ItemTypes.Food;
                 heal = 5;
                 break;
             case 303:
@@ -182,15 +182,15 @@ public static class ItemData
                 type = ItemTypes.Money;
                 break;
             #endregion
-            #region Quest 700-799
+            #region Scroll 700-799
             case 700:
                 name = "Mysterious Scroll";
                 description = "";
                 amount = 1;
                 value = 1;
-                icon = "Quest/Scroll";
-                mesh = "Quest/Scroll";
-                type = ItemTypes.Quest;
+                icon = "Scroll/Scroll1";
+                mesh = "Scroll/Scroll1";
+                type = ItemTypes.Scroll;
                 break;
             #endregion
             #region Misc 800-899
@@ -201,7 +201,7 @@ public static class ItemData
                 value = 5;
                 icon = "Misc/OldBook";
                 mesh = "Misc/OldBook";
-                type = ItemTypes.Quest;
+                type = ItemTypes.Misc;
                 break;
             #endregion
             default:

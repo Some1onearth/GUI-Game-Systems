@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu pauseMenu;
 #if UNITY_EDITOR
     [Serializable]
     public struct KeySetup
@@ -64,7 +65,7 @@ public class PauseMenu : MonoBehaviour
         UnPaused();
     }
 
-    void Paused() //when paused is triggered
+    public void Paused() //when paused is triggered
     {
         //stop our time
         Time.timeScale = 0;
@@ -76,7 +77,7 @@ public class PauseMenu : MonoBehaviour
     public void UnPaused() //when unpaused is triggered
     {
         //unpause our game if attached to a button...doesn't matter if it's an ESC toggle
-        isPaused = false;
+        //isPaused = false;
         //start time
         Time.timeScale = 1;
         //lock our cursor
@@ -95,10 +96,15 @@ public class PauseMenu : MonoBehaviour
             if (isPaused)
             {
                 Paused();
+                isPaused = true;
             }
             else
             {
-                UnPaused();
+                if (!Inventory.showInv)
+                {
+                    UnPaused();
+                }
+                isPaused = false;
             }
         }
     }
@@ -119,12 +125,18 @@ public class PauseMenu : MonoBehaviour
         //Return // if GUI button on the screen is pressed
         if (GUI.Button(new Rect(7 * IMGUIScript.scr.x, 3 * IMGUIScript.scr.y, 2 * IMGUIScript.scr.x, 0.5f * IMGUIScript.scr.y), "Return"))
         {
+            if (!Inventory.showInv)
+            {
             //unpause our game
             UnPaused();
+            }
+            isPaused = false;
         }
         //MainMenu
         if (GUI.Button(new Rect(7 * IMGUIScript.scr.x, 4 * IMGUIScript.scr.y, 2 * IMGUIScript.scr.x, 0.5f * IMGUIScript.scr.y), "Title Screen"))
-        {            
+        {
+            Time.timeScale = 1;
+            isPaused = false;
             //change scene
             SceneManager.LoadScene(0);
         }

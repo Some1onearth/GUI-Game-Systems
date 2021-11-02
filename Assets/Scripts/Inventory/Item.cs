@@ -90,7 +90,7 @@ public enum ItemTypes
     Weapon,
     Potion,
     Money,
-    Quest,
+    Scroll,
     Food,
     Ingredient,
     Craftable,

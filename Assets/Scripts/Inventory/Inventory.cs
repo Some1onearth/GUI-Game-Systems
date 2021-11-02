@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
     public static int money;
     public Vector2 scrollPos;
     public string sortType = "All";
-    public string[] typeNames = new string[9] { "All", "Armour", "Weapon", "Potion", "Food", "Ingredients", "Craftable", "Quest", "Misc" };
+    public string[] typeNames = new string[9] { "All", "Armour", "Weapon", "Potion", "Food", "Ingredient", "Craftable", "Scroll", "Misc" };
     public Transform dropLocation;
     [System.Serializable]
     public struct EquippedItems
@@ -32,74 +32,62 @@ public class Inventory : MonoBehaviour
     //start - setting up items
     private void Start()
     {
-        //shows item in pause menu
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(100));
-        inv.Add(ItemData.CreateItem(102));
-        inv.Add(ItemData.CreateItem(200));
-        inv.Add(ItemData.CreateItem(300));
-        inv.Add(ItemData.CreateItem(301));
-        inv.Add(ItemData.CreateItem(400));
-        inv.Add(ItemData.CreateItem(500));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
-        inv.Add(ItemData.CreateItem(1));
-        inv.Add(ItemData.CreateItem(2));
-        inv.Add(ItemData.CreateItem(0));
+
     }
     //update - toggle inv and add more items
     private void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.I))
         {
-            inv.Add(ItemData.CreateItem(Random.Range(0, 3)));
+            for (int i = 0; i < 34; i++)
+            {
+                inv.Add(ItemData.CreateItem(Random.Range(0, 703)));
+            }
+        }
+#endif
+        if (Input.GetKeyDown(IMGUIScript.inputKeys["Inventory"]) && !PauseMenu.isPaused)
+        {
+            showInv = !showInv;
+            if (showInv)
+            {
+                //cursor can be seen
+                Cursor.visible = true;
+                //cursor not locked
+                Cursor.lockState = CursorLockMode.Confined;
+                //time paused
+                Time.timeScale = 0;
+                //PauseMenu.pauseMenu.Paused(); // can use this method but depends on how you plan it out
+            }
+            else
+            {
+                //cursor can not be seen
+                Cursor.visible = false;
+                //cursor is locked3
+                Cursor.lockState = CursorLockMode.Locked;
+                //time is not paused
+                Time.timeScale = 1;
+                //PauseMenu.pauseMenu.UnPaused();
+            }
         }
     }
     //Ongui - 
     private void OnGUI()
     {
-        for (int i = 0; i < typeNames.Length; i++)
+        if (showInv && !PauseMenu.isPaused)
         {
-            if (GUI.Button(new Rect(4 * IMGUIScript.scr.x + i * 1.5f, 0, 1.5f * IMGUIScript.scr.x, 0.25f * IMGUIScript.scr.y), typeNames[i]))
+            for (int i = 0; i < typeNames.Length; i++)
             {
-                sortType = typeNames[i];
+                if (GUI.Button(new Rect(IMGUIScript.scr.x * 1f + i * (IMGUIScript.scr.x * 1.5f), IMGUIScript.scr.y * 0f, IMGUIScript.scr.x * 1.5f,  IMGUIScript.scr.y * 0.25f), typeNames[i]))
+                {
+                    sortType = typeNames[i];
+                }
             }
-        }
-        DisplayInv();
-        if (selectedItem != null)
-        {
-            UseItem();
+            DisplayInv();
+            if (selectedItem != null)
+            {
+                UseItem();
+            }
         }
     }
     //DisplayInv
@@ -134,6 +122,7 @@ public class Inventory : MonoBehaviour
                         {
                             selectedItem = inv[i];
                         }
+                        s++;
                     }
                 }
             }
@@ -240,6 +229,7 @@ public class Inventory : MonoBehaviour
                         }
                         equippedItemsSlot[1].equippedItem = Instantiate(selectedItem.MeshName, equippedItemsSlot[1].equippedLocation);
                         equippedItemsSlot[1].equippedItem.name = selectedItem.Name;
+                        equippedItemsSlot[1].equippedItem.GetComponent<ItemHandler>().enabled = false;
                     }
                 }
                 else
@@ -260,7 +250,7 @@ public class Inventory : MonoBehaviour
                 break;
             case ItemTypes.Money:
                 break;
-            case ItemTypes.Quest:
+            case ItemTypes.Scroll:
                 break;
             case ItemTypes.Food:
                 if (GUI.Button(new Rect(4f * IMGUIScript.scr.x, 4.25f * IMGUIScript.scr.y, 1.5f * IMGUIScript.scr.x, 0.25f * IMGUIScript.scr.y), "Eat"))
@@ -289,5 +279,36 @@ public class Inventory : MonoBehaviour
                 break;
         }
         //discard button
+        if (GUI.Button(new Rect(5.5f * IMGUIScript.scr.x, 4.25f * IMGUIScript.scr.y, 1.5f * IMGUIScript.scr.x, 0.25f * IMGUIScript.scr.y), "Discard"))
+        {
+            //check if the item is equipped
+            for (int i = 0; i < equippedItemsSlot.Length; i++)
+            {
+                if (equippedItemsSlot[i].equippedItem != null && selectedItem.Name == equippedItemsSlot[i].equippedItem.name)
+                {
+                    //if so destroy from scene
+                    Destroy(equippedItemsSlot[i].equippedItem);
+                    equippedItemsSlot[i].equippedItem = null;
+                }
+            }
+
+            //spawn item at drop location
+            GameObject itemToDrop = Instantiate(selectedItem.MeshName, dropLocation.position, Quaternion.identity);
+            //apply gravity and make sure its named correctly
+            itemToDrop.name = selectedItem.Name;
+            itemToDrop.AddComponent<Rigidbody>().useGravity = true;
+            //if the amount > 1 if so reduce from list
+            if (selectedItem.Amount > 1)
+            {
+                selectedItem.Amount--;
+            }
+            //else remove from list
+            else
+            {
+                inv.Remove(selectedItem);
+                selectedItem = null;
+                return;
+            }
+        }
     }
 }
